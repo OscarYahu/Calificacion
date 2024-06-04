@@ -1,0 +1,115 @@
+package paqprincipal;
+
+import java.io.*;
+import java.util.*;
+
+public class AddressBook {
+    private HashMap<String, String> contacts;
+    private String filePath;
+
+    public AddressBook(String filePath) {
+        this.filePath = filePath;
+        this.contacts = new HashMap<>();
+    }
+
+    public void load() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(filePath));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 2) {
+                    String number = parts[0];
+                    String name = parts[1];
+                    contacts.put(number, name);
+                }
+            }
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("Error al cargar los contactos: " + e.getMessage());
+        }
+    }
+
+    public void save() {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+            for (Map.Entry<String, String> entry : contacts.entrySet()) {
+                String number = entry.getKey();
+                String name = entry.getValue();
+                writer.write(number + "," + name);
+                writer.newLine();
+            }
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error al guardar los contactos: " + e.getMessage());
+        }
+    }
+
+    public void list() {
+        System.out.println("Contactos:");
+        for (Map.Entry<String, String> entry : contacts.entrySet()) {
+            String number = entry.getKey();
+            String name = entry.getValue();
+            System.out.println(number + " : " + name);
+        }
+    }
+
+    public void create(String number, String name) {
+        contacts.put(number, name);
+    }
+
+    public void delete(String number) {
+        contacts.remove(number);
+    }
+
+    public static void main(String[] args) {
+        String filePath = "contacts.txt";
+        AddressBook addressBook = new AddressBook(filePath);
+        addressBook.load();
+
+        Scanner scanner = new Scanner(System.in);
+        int choice = 0;
+
+        while (choice != 4) {
+            System.out.println("Seleccione una opción:");
+            System.out.println("1. Mostrar contactos");
+            System.out.println("2. Crear contacto");
+            System.out.println("3. Eliminar contacto");
+            System.out.println("4. Salir");
+
+            try {
+                choice = Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Opción inválida. Intente nuevamente.");
+                continue;
+            }
+
+            switch (choice) {
+                case 1:
+                    addressBook.list();
+                    break;
+                case 2:
+                    System.out.println("Ingrese el número de contacto:");
+                    String number = scanner.nextLine();
+                    System.out.println("Ingrese el nombre de contacto:");
+                    String name = scanner.nextLine();
+                    addressBook.create(number, name);
+                    break;
+                case 3:
+                    System.out.println("Ingrese el número de contacto a eliminar:");
+                    String numberToDelete = scanner.nextLine();
+                    addressBook.delete(numberToDelete);
+                    break;
+                case 4:
+                    addressBook.save();
+                    System.out.println("Saliendo de la aplicación...");
+                    break;
+                default:
+                    System.out.println("Opción inválida. Intente nuevamente.");
+                    break;
+            }
+        }
+
+        scanner.close();
+    }
+}
