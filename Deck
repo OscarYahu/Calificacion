@@ -1,81 +1,73 @@
-package juegopoker;
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package deck;
+import java.util.*;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
+public class Deck {
 
-public class Deck extends Card{
-	public static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-	String pPalo, pColor;
-	int pValor;
-	
-	ArrayList <Card> cllcCard = new ArrayList<Card>();
-	ArrayList <Card> deck = new ArrayList<Card>();
-	
-	public Deck(String pPalo, String pColor, int pValor) {
-		super(pPalo, pColor, pValor);
-		this.pPalo = pPalo;
-		this.pColor = pColor;
-		this.pValor = pValor;
-		CrearBaraja();
-	}
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Card card = new Card();
+        int PALOS = card.palo.length;
+        int VALORES = card.valor.length;
+        int COLORES = card.color.length;
+        int N = PALOS * VALORES * COLORES; 
 
-	//Crear Baraja
-	public int CrearBaraja(){
-		int i;
-		
-		System.out.println( "Creando Baraja de Poker: ");	
-		for (i=0; i<13; i++) {
-			cllcCard.add(new Card("CORAZONES","ROJO", i+1));
-		}
-		
-		for (i=0; i<13; i++) {
-			cllcCard.add(new Card("DIAMANTES","ROJO", i+1));
-		}
-		
-		for (i=0; i<13; i++) {
-			cllcCard.add(new Card("TREBOLES","NEGRO",i+1));
-		}
-		
-		for (i=0; i<13; i++) {
-			cllcCard.add(new Card("PICAS","NEGRO",i+1));
-		}
-		return i;
-		
-	};
-	
-	//Mezclar Baraja
-	public void mezclarDeck() {
-		for(Card c : cllcCard) {
-			System.out.println("\n Se esta mezclando el Deck: ");
-			Collections.shuffle(cllcCard);
-			System.out.println(c + "\n Se mezclo Deck. ");
-		}
-		
-	}
-	
-	//Mostrar primera carta del deck, luego debera removerse.
-	public Card head() {
-        System.out.println("Carta numero 1: " + cllcCard.get(0));
-        cllcCard.remove(0);
-        return null;
-    };
-	
-	 // Mostrar una carta aleatorea del deck
-	 public Card pick(){
-		 System.out.println("Carta al azar: " + cllcCard);
-		 return null; 
-     }
-	
-	//Mostrar Mano
-	 public void hand () {
-		}
-	 
-	 public void despliegaBaraja() {
-		 for (Card icard: cllcCard) {
-			 System.out.print( icard.toString() + "\t" + "Palo: " + palo + "\t" + "Color: " + color + "\t" + "Numero: " + valor + "\t");
-		 }
-	 }
-	
+        ArrayList<String> deck = new ArrayList<String>();
+        for (int i = 0; i < VALORES; i++) {
+            for (int j = 0; j < PALOS; j++) {
+                deck.add(card.palo[j]+ ", Rojo , " + card.valor[i]);
+                deck.add(card.palo[j]+ ", Negro , " + card.valor[i]);
+            }
+        }
+
+        Iterator<String> nombreIterator = deck.iterator();
+        while(nombreIterator.hasNext()){
+            String elemento = nombreIterator.next();
+            System.out.print(elemento+" / ");
+        }
+        suflle(deck);
+        head(deck);
+        pick(deck);
+        hand(deck);
+    }
+
+    public static void suflle(ArrayList deck){
+        ArrayList<String> values = deck;
+        Collections.shuffle(values);
+        System.out.println("\n Se mezcló el Deck.");
+        Iterator<String> nombreIterator2 = deck.iterator();
+        while(nombreIterator2.hasNext()){
+            String elemento = nombreIterator2.next();
+            System.out.print(elemento+" / ");
+        }
+    }
+
+    public static void head(ArrayList deck){
+        System.out.println(deck.get(0));
+        deck.remove(0);
+        System.out.println("Quedan " + deck.size() + " cartas \n");
+    }
+
+    public static void pick(ArrayList  deck){
+        Random aleatorio = new Random();
+        System.out.println(deck.get(aleatorio.nextInt(deck.size())));
+        deck.remove(aleatorio.nextInt(deck.size()));
+        System.out.println("Quedan " + deck.size() + " cartas \n");
+    }
+
+    public static void hand(ArrayList deck){
+        for(int i=0; i<=4; i++){
+            System.out.println(deck.get(i));
+        }
+        for(int i=0; i<=4; i++){
+            deck.remove(i);
+        }
+        System.out.println("Quedan " + deck.size()+ " cartas");
+    }
+    
 }
